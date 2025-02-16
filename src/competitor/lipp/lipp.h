@@ -21,6 +21,10 @@ public:
 
     long long memory_consumption() { return lipp.total_size(); }
 
+    void tongji(){
+        lipp.tongji();
+    }
+
 private:
     LIPP <KEY_TYPE, PAYLOAD_TYPE> lipp;
 };

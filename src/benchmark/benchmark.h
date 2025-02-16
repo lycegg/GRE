@@ -33,6 +33,7 @@ class Benchmark {
     };
 
     // parameters
+    bool lyc_debug = false;
     double read_ratio = 1;
     double insert_ratio = 0;
     double delete_ratio = 0;
@@ -224,6 +225,7 @@ public:
         memory_record = get_boolean_flag(flags, "memory");
         dataset_statistic = get_boolean_flag(flags, "dataset_statistic");
         data_shift = get_boolean_flag(flags, "data_shift");
+        lyc_debug = get_boolean_flag(flags, "lyc_debug");
 
         COUT_THIS("[micro] Read:Insert:Update:Scan:Delete= " << read_ratio << ":" << insert_ratio << ":" << update_ratio << ":"
                                                       << scan_ratio << ":" << delete_ratio);
@@ -241,12 +243,13 @@ public:
         operations.reserve(operations_num);
         COUT_THIS("sample keys.");
         KEY_TYPE *sample_ptr = nullptr;
-        if (sample_distribution == "uniform") {
-            sample_ptr = get_search_keys(&init_keys[0], init_table_size, operations_num, &random_seed);
-        } else if (sample_distribution == "zipf") {
-            sample_ptr = get_search_keys_zipf(&init_keys[0], init_table_size, operations_num, &random_seed);
+        if(init_table_size){
+            if (sample_distribution == "uniform") {
+                sample_ptr = get_search_keys(&init_keys[0], init_table_size, operations_num, &random_seed);
+            } else if (sample_distribution == "zipf") {
+                sample_ptr = get_search_keys_zipf(&init_keys[0], init_table_size, operations_num, &random_seed);
+            }
         }
-
         // generate operations(read, insert, update, scan)
         COUT_THIS("generate operations.");
         std::uniform_real_distribution<> ratio_dis(0, 1);
@@ -519,6 +522,26 @@ public:
                 index_t *index;
                 prepare(index, keys);
                 run(index);
+                if(lyc_debug){
+                    if(index_type=="btree"){
+                        auto lyct=static_cast<BTreeInterface<KEY_TYPE, PAYLOAD_TYPE> *>(index);
+                        lyct->zhuangzailv();
+                    }
+                    if(index_type=="artunsync"){
+                        auto lyct=static_cast<ARTUnsynchronizedInterface<KEY_TYPE, PAYLOAD_TYPE> *>(index);
+                        lyct->cenggao();
+                    }
+                    if(index_type=="alex"){
+                        auto lyct=static_cast<alexInterface<KEY_TYPE, PAYLOAD_TYPE> *>(index);
+                        lyct->cenggao_zhuangzailv();
+
+                    }
+                    if(index_type=="lipp"){
+                        auto lyct=static_cast<LIPPInterface<KEY_TYPE, PAYLOAD_TYPE> *>(index);
+                        lyct->tongji();
+
+                    }
+                }
                 if (index != nullptr) delete index;
             }
         }

@@ -8,6 +8,9 @@
 template<class KEY_TYPE, class PAYLOAD_TYPE>
 class ARTUnsynchronizedInterface : public indexInterface<KEY_TYPE, PAYLOAD_TYPE> {
 public:
+    void cenggao(){
+        idx->cenggao();
+    }
 
     ARTUnsynchronizedInterface() {
         idx = new ART_unsynchronized::Tree(loadKey);
@@ -73,9 +76,10 @@ template<class KEY_TYPE, class PAYLOAD_TYPE>
 void
 ARTUnsynchronizedInterface<KEY_TYPE, PAYLOAD_TYPE>::bulk_load(std::pair <KEY_TYPE, PAYLOAD_TYPE> *key_value, size_t num,
                                                               Param *param) {
-    for (auto i = 0; i < num; i++) {
+    /*for (auto i = 0; i < num; i++) {
         put(key_value[i].first, key_value[i].second, param);
-    }
+    }*/
+    idx->bulk_load(key_value, key_value + num);
 }
 
 template<class KEY_TYPE, class PAYLOAD_TYPE>

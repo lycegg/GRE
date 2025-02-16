@@ -25,20 +25,21 @@ public:
     }
 
     uint64_t sum = 0;
-    sum++;
     PAYLOAD_TYPE accumulator = 0;
     for (size_t i = 0; i < key_num; i++) {
-      ++iter;
+      accumulator += iter->second;
       sum++;
+      ++iter;
       if (iter == idx.end()) {
         break;
       }
-      accumulator += iter->second;
     }
     return sum;
 
   }
-
+  void zhuangzailv(){
+    idx.zhuangzailv();
+  }
   long long memory_consumption() { return 0; }
 
 private:

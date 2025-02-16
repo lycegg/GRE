@@ -21,6 +21,10 @@ public:
 
   long long memory_consumption() { return index.model_size() + index.data_size(); }
 
+  void cenggao_zhuangzailv(){
+    index.cenggao_zhuangzailv();
+  }
+
 private:
   alex::Alex<KEY_TYPE, PAYLOAD_TYPE, alex::AlexCompare, std::allocator < std::pair < KEY_TYPE, PAYLOAD_TYPE>>, false>
   index;
